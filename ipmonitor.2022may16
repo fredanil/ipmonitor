@@ -1,0 +1,56 @@
+#!/bin/bash
+# Скрипт выясняющий статус использования IP-адресов на базе работы скрипта agent-ipmonitor
+# v. 2022may12
+
+#=========== DATA SECTION ================
+WORKDIR='/home/f/Scripts/IP-monitor'
+LOGFILE="$WORKDIR/ipstatus.log"
+NETWORK='10.156.11'
+ArrayIP=(`echo {1..254}`)
+#TEMPFILE=`mktemp -p $WORKDIR`
+#WAITSEC=0.05
+#WAITSEC=0.1
+#echo ${ArrayIP[*]}
+#exit
+
+#========== FUNC SECTION ================
+# Запись в лог-файл статусов IP-адресов, ( 0=живой, 1=не отвечает ) 
+CheckIP-WriteLog () {
+	/bin/echo -n `date +%Y-%m-%d-%H`: > $TEMPFILE
+	for IP in `echo ${ArrayIP[*]}`
+	do
+		ping -W $WAITSEC -c 1 $NETWORK.$IP > /dev/null
+		/bin/echo -n $?: >> $TEMPFILE
+	done
+	/bin/echo  >> $TEMPFILE
+	cat $TEMPFILE >> $LOGFILE
+	rm -f $TEMPFILE
+}
+
+# Проверка лога конкретного IP-адреса на наличие хотя бы одного нуля, это означает IP-адрес пинговался
+# входной параметр IP-адрес, возврат статуса в переменной $?
+CheckIP-IsAlive () {
+	for IPStat in $(cut -d":" -f 2-255 $LOGFILE | cut -d":" -f $1)
+	do
+		if [[ $IPStat == 0 ]] ; then
+			/bin/echo IP-адрес: $1 used...
+			break 
+		fi
+	done
+}
+
+#=========== CODE SECTION ================
+for IP in {1..254}
+do
+	CheckIP-IsAlive $IP
+done
+exit
+#for ip in {1..254}; do echo ${ip}; done
+for PossibleFreeIP in {1..254}
+do
+	CheckIP $PossibleFreeIP
+	if [[ `echo $?` != 0 ]]
+	then echo IP address: $NETWORK.$PossibleFreeIP free...
+	fi
+done
+

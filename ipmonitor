@@ -1,0 +1,81 @@
+#!/bin/bash
+# Скрипт выясняющий статус использования IP-адресов
+# на базе работы скрипта agent-ipmonitor за определенный период
+
+# ========== DATA SECTION ================
+CountUsedIP=0
+CountDiedIP=0
+CountAlwaysUsedIP=0
+NETWORK=10.156.11
+WORKPATH=/home/f/Scripts/IP-monitor
+LOGFILE=$WORKPATH/ipstatus.log
+BOLD="\033[1m"
+RED="\033[31m"
+GREEN="\033[32m"
+RESET="\033[0m"
+
+# ========== FUNC SECTION ================
+# Проверка лога конкретного IP-адреса на ночную работу,
+# входной параметр IP-адрес, возврат статуса в переменной $?
+# $? == 1 => компьютер когда-то не пинговался
+# $? == 0 => компьютер всегда пинговался
+
+CheckIP-IsAliveAlways () {
+    for IPStat in $(cut -d":" -f 2-255 $LOGFILE | cut -d":" -f $1)
+    do
+        if [[ $IPStat == 1 ]] ; then
+            break 
+        fi
+    done
+}
+
+# Проверка лога конкретного IP-адреса на наличие хотя бы одного нуля,
+# это означает IP-адрес пинговался
+# входной параметр IP-адрес, возврат статуса в переменной $?
+# $? == 1 => компьютер никогда не пинговался
+# $? == 0 => компьютер когда-то пинговался
+
+CheckIP-IsAlive () {
+    for IPStat in $(cut -d":" -f 2-255 $LOGFILE | cut -d":" -f $1)
+    do
+        if [[ $IPStat == 0 ]] ; then
+            break 
+        fi
+    done
+}
+
+# =========== CODE SECTION ================
+StartPeriod=$(head -n 1 ./ipstatus.log | cut -d":" -f 1)
+LastPeriod=$(tail -n 1 ./ipstatus.log | cut -d":" -f 1)
+
+/bin/echo Рассматривается статистика использования IP-адресов за период:
+/bin/echo Начиная с $StartPeriod по $LastPeriod
+/bin/echo подсеть $NETWORK.0/24
+read -p "Для получения статистики нажмите любую кнопку..."
+
+for IP in {1..254}
+do
+    CheckIP-IsAlive $IP
+    if [[ $IPStat == 0 ]] ; then
+        /bin/echo -e IP-адрес: $BOLD$GREEN$NETWORK.$IP used...$RESET
+        let ++CountUsedIP
+    else
+        /bin/echo -e IP-адрес: $BOLD$RED$NETWORK.$IP died...$RESET
+        let ++CountDiedIP
+    fi
+done
+
+for IP in {1..254}
+do
+    CheckIP-IsAliveAlways $IP
+    if [[ $IPStat == 0 ]] ; then
+        /bin/echo -e IP-адрес: $BOLD$GREEN$NETWORK.$IP always UP status...$RESET
+        let ++CountAlwaysUsedIP
+    fi
+done
+
+/bin/echo -e Количество когда-либо использовавшихся IP-адресов в подсети $NETWORK.0/24: $BOLD$GREEN$CountUsedIP$RESET
+/bin/echo -e Количество вообще неиспользовавшихся IP-адресов в подсети $NETWORK.0/24: $BOLD$RED$CountDiedIP$RESET
+/bin/echo -e Количество постоянно включенных IP-адресов в подсети $NETWORK.0/24: $BOLD$RED${CountAlwaysUsedIP}${RESET}
+/bin/echo За период начиная с $StartPeriod по $LastPeriod
+exit

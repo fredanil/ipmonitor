@@ -1,0 +1,43 @@
+#!/bin/bash
+# Скрипт агент, запускаемый по крону, записывает в лог-файл состояние пинга IP-адресов подсети
+# все пути должны быть абсолютными т. к. скрипт работает через системный cron
+# v. 2022may12
+
+#=========== DATA SECTION ================
+WORKDIR='/home/f/Scripts/IP-monitor'
+LOGFILE="$WORKDIR/ipstatus.log"
+NETWORK='10.156.11'
+ArrayIP=(`echo {1..254}`)
+TEMPFILE=`mktemp -p $WORKDIR`
+WAITSEC=0.05
+#WAITSEC=0.1
+#echo ${ArrayIP[*]}
+#exit
+
+#========== FUNC SECTION ================
+CheckIP-WriteLog () {
+	/bin/echo -n `date +%Y-%m-%d-%H`: > $TEMPFILE
+	for IP in `echo ${ArrayIP[*]}`
+	do
+		ping -W $WAITSEC -c 1 $NETWORK.$IP > /dev/null
+		/bin/echo -n $?: >> $TEMPFILE
+	done
+	/bin/echo  >> $TEMPFILE
+	cat $TEMPFILE >> $LOGFILE
+	rm -f $TEMPFILE
+}
+
+#=========== CODE SECTION ================
+CheckIP-WriteLog
+#date +%k:%M:%S >> /home/f/Scripts/IP-monitor/CronTest
+#echo WorkDir: $WORKDIR, TempFile: $TEMPFILE, LogFile: $LOGFILE >> /home/f/Scripts/IP-monitor/CronTest
+exit
+#for ip in {1..254}; do echo ${ip}; done
+for PossibleFreeIP in {1..254}
+do
+	CheckIP $PossibleFreeIP
+	if [[ `echo $?` != 0 ]]
+	then echo IP address: $NETWORK.$PossibleFreeIP free...
+	fi
+done
+
