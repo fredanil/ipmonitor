@@ -1,0 +1,35 @@
+#!/bin/bash
+# Скрипт агент (${WORKPATH}/crontab.stroke), запускаемый по крону, записывает в лог-файл состояние пинга IP-адресов подсети
+# все пути должны быть абсолютными, так как скрипт работает через системный cron файл /etc/crontab
+# v. 2022may12
+
+# инициализация глобальных переменных
+ source /home/f/Scripts/IP-monitor/include.global
+
+#=========== DATA SECTION ================
+ArrayIP=(`echo {1..254}`)
+#echo ${WORKPATH}
+#sleep 3
+TEMPFILE=$(mktemp -p ${WORKPATH})
+WAITSEC=0.05
+#WAITSEC=0.1
+#echo ${ArrayIP[*]}
+#exit
+
+#========== FUNC SECTION ================
+CheckIP-WriteLog () {
+	/bin/echo -n `date +%Y-%m-%d-%H`: > ${TEMPFILE}
+	for IP in $(echo ${ArrayIP[*]})
+	do
+		ping -W ${WAITSEC} -c 1 ${NETWORK}.${IP} > /dev/null
+		/bin/echo -n $?: >> ${TEMPFILE}
+	done
+    /bin/echo  >> ${TEMPFILE}
+    cat ${TEMPFILE} >> ${LOGFILE}
+	rm -f ${TEMPFILE}
+}
+
+#=========== CODE SECTION ================
+CheckIP-WriteLog
+exit
+

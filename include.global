@@ -1,0 +1,8 @@
+# global status
+NETWORK=10.156.11
+WORKPATH=/home/f/Scripts/IP-monitor/
+LOGFILE=${WORKPATH}ipstatus.log
+BOLD="\033[1m"
+RED="\033[31m"
+GREEN="\033[32m"
+RESET="\033[0m"

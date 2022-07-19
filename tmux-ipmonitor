@@ -1,0 +1,22 @@
+#!/bin/bash
+# tmux kill-server
+source /home/f/Scripts/IP-monitor/include.global 
+rm ${WORKPATH}.*sw? > /dev/null
+cd ${WORKPATH}
+
+tmux ls | grep ipmonitor
+if [[ $? == 0 ]] ; then
+    echo Сессия существует, присоединяемся...
+    sleep 3
+    tmux attach-session -dt ipmonitor:0.0 # отключаем других клиентов
+else
+    echo Сессии нет, создаем...
+    sleep 3
+    tmux new-session -s ipmonitor -d
+    tmux split-window -h -t ipmonitor:0.0
+    tmux send-keys -t ipmonitor:0.0 vim " " ${WORKPATH}ipmonitor Enter
+    tmux split-window -v -t ipmonitor:0.1
+    tmux send-keys -t ipmon:0.0 'Gkk' 
+    tmux attach-session -t ipmonitor:0.0
+fi
+
