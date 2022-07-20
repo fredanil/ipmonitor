@@ -2,6 +2,9 @@
 NETWORK=10.156.11
 WORKPATH=/home/f/Scripts/IP-monitor/
 LOGFILE=${WORKPATH}ipstatus.log
+LOGFAIL=${WORKPATH}ipfail.log
+LOGSENS=${WORKPATH}ipsens.log
+SENS=5
 BOLD="\033[1m"
 RED="\033[31m"
 GREEN="\033[32m"
