@@ -6,15 +6,12 @@
 # инициализация глобальных переменных
  source /home/f/Scripts/IP-monitor/include.global
 
+# инициализация локальных переменных
 #=========== DATA SECTION ================
 ArrayIP=(`echo {1..254}`)
-#echo ${WORKPATH}
-#sleep 3
 TEMPFILE=$(mktemp -p ${WORKPATH})
 WAITSEC=0.05
 #WAITSEC=0.1
-#echo ${ArrayIP[*]}
-#exit
 
 #========== FUNC SECTION ================
 CheckIP-WriteLog () {
