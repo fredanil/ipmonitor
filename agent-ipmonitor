@@ -31,12 +31,12 @@ CheckIP-WriteLog () {
         fi
 	done
     /bin/echo  >> ${TEMPFILE}
-    if [[ ${IPCountGood} -gt 5 ]] ; then
-        cat ${TEMPFILE} >> ${LOGFILE}
-    elif [[ ${IPCountGood} == 0 ]] ; then
+    if [[ ${IPCountGood} == 0 ]] ; then
         cat ${TEMPFILE} >> ${LOGFAIL}
-    else
+    elif [[ ${IPCountGood} -le ${SENS} ]] ; then
         cat ${TEMPFILE} >> ${LOGSENS}
+    else
+        cat ${TEMPFILE} >> ${LOGFILE}
     fi
 
 	rm -f ${TEMPFILE}
