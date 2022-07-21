@@ -42,8 +42,8 @@ CheckIP-IsAlive () {
 
 # =========== CODE SECTION ================
 cd ${WORKPATH}
-StartPeriod=$(head -n 1 ./ipstatus.log | cut -d":" -f 1)
-LastPeriod=$(tail -n 1 ./ipstatus.log | cut -d":" -f 1)
+StartPeriod=$(head -n 1 ${LOGFILE} | cut -d":" -f 1)
+LastPeriod=$(tail -n 1 ${LOGFILE} | cut -d":" -f 1)
 
 /bin/echo Рассматривается статистика использования IP-адресов за период:
 /bin/echo Начиная с ${StartPeriod} по ${LastPeriod}
