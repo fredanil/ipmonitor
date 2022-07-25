@@ -1,6 +1,6 @@
 # global status
 NETWORK=10.156.11
-WORKPATH=/home/f/Scripts/IP-monitor/
+WORKPATH=/home/f/Scripts/ipmonitor/
 LOGFILE=${WORKPATH}ipstat.log
 LOGFAIL=${WORKPATH}ipfail.log
 LOGSENS=${WORKPATH}ipsens.log

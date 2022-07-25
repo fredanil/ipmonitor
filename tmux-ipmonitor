@@ -1,6 +1,6 @@
 #!/bin/bash
 # tmux kill-server
-source /home/f/Scripts/IP-monitor/include.global 
+source /home/f/Scripts/ipmonitor/include.global 
 rm ${WORKPATH}.*sw? > /dev/null
 cd ${WORKPATH}
 
