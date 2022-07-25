@@ -6,8 +6,8 @@
 source /home/f/Scripts/IP-monitor/include.global
 
 # ========== DATA SECTION ================
-CountUsedIP=0
-CountDiedIP=0
+CountSomeUsedIP=0
+CountNewerUsedIP=0
 CountAlwaysUsedIP=0
 
 # ========== FUNC SECTION ================
