@@ -1,1 +1,2 @@
-1 1,9,11,15,17 * * * root /home/f/Scripts/IP-monitor/agent-ipmonitor
+# Add this stroke in /etc/crontab
+1 1,9,11,15,17 * * * root /home/f/Scripts/ipmonitor/agent-ipmonitor

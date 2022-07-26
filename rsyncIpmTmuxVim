@@ -1,5 +1,5 @@
 #!/bin/bash
 rsync /home/f/.vimrc  /home/f/Dropbox/home/f/
 rsync /home/f/.tmux.conf  /home/f/Dropbox/home/f/
-rsync /home/f/Scripts/IP-monitor/*  /home/f/Dropbox/home/f/Scripts/IP-monitor/
+rsync /home/f/Scripts/ipmonitor/*  /home/f/Dropbox/home/f/Scripts/ipmonitor/
 

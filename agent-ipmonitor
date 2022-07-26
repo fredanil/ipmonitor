@@ -4,7 +4,7 @@
 # v. 2022may12
 
 # инициализация глобальных переменных
- source /home/f/Scripts/IP-monitor/include.global
+ source /home/f/Scripts/ipmonitor/include.global
 
 # инициализация локальных переменных
 #=========== DATA SECTION ================
